@@ -7,6 +7,7 @@ import {
 export type ToolKind = 'regular' | 'super' | 'link';
 
 export const CORE_REGULAR_TOOL_IDS = [
+  'chatbot',
   'certSign',
   'sign',
   'addPassword',
@@ -113,4 +114,3 @@ type Disjoint<A, B> = [A & B] extends [never] ? true : false;
 type _Check1 = Assert<Disjoint<RegularToolId, SuperToolId>>;
 type _Check2 = Assert<Disjoint<RegularToolId, LinkToolId>>;
 type _Check3 = Assert<Disjoint<SuperToolId, LinkToolId>>;
-

@@ -2465,5 +2465,57 @@
     "error": {
       "failed": "An error occurred while adding attachments to the PDF."
     }
+  },
+  "chatbot": {
+    "title": "Stirling PDF Bot",
+    "alphaBadge": "Alpha",
+    "alphaTitle": "Experimental feature",
+    "alphaDescription": "This chatbot is in alpha. It currently ignores images and may produce inaccurate answers. Your PDF text stays local until you confirm you want to chat.",
+    "acceptAlphaLabel": "I understand this feature is experimental and image content is not supported yet.",
+    "fileLabel": "Document to query",
+    "filePlaceholder": "Select an uploaded PDF",
+    "noFiles": "Upload a PDF from File Manager to start chatting.",
+    "ocrToggle": "Run OCR before extracting text (uses more resources)",
+    "ocrHint": "Enable when your PDF is a scan or contains images.",
+    "refreshButton": "Re-sync document",
+    "startButton": "Send document to chat",
+    "status": {
+      "runningOcr": "Running OCR and extracting text…",
+      "extracting": "Extracting text from PDF…",
+      "syncing": "Syncing document with Stirling Bot…"
+    },
+    "sessionSummary": "Context summary",
+    "contextDetails": "{{pages}} pages · {{chars}} characters synced",
+    "conversationTitle": "Conversation",
+    "emptyState": "Ask a question about your PDF to start the conversation.",
+    "escalationToggle": "Allow upgrade to GPT5-Mini for complex prompts",
+    "promptPlaceholder": "Ask anything about this PDF…",
+    "promptCounter": "{{used}} / {{limit}} characters",
+    "sendButton": "Send",
+    "viewerButton": "Chat about this PDF",
+    "userLabel": "You",
+    "botLabel": "Stirling Bot",
+    "confidence": "Confidence: {{value}}%",
+    "modelTag": "Model: {{name}}",
+    "toasts": {
+      "noFileTitle": "No PDF selected",
+      "noFileBody": "Please choose a document before starting the chatbot.",
+      "ackTitle": "Accept alpha notice",
+      "ackBody": "Please acknowledge the alpha warning before starting.",
+      "failedSessionTitle": "Could not prepare document",
+      "failedPromptTitle": "Unable to ask question",
+      "noSessionTitle": "Sync your document first",
+      "noSessionBody": "Send your PDF to the chatbot before asking questions."
+    },
+    "noTextTitle": "No text detected in this PDF",
+    "noTextBody": "We could not find selectable text in this document. Would you like to run OCR to convert scanned pages into text?",
+    "noTextDismiss": "Maybe later",
+    "noTextRunOcr": "Run OCR and retry",
+    "toolNotice": "Chatbot lives inside the main workspace. Use the button below to focus the conversation pane on the left.",
+    "toolDescription": "Ask Stirling Bot questions about any uploaded PDF. The assistant uses your extracted text, so make sure the correct document is selected inside the chat panel.",
+    "toolOpenButton": "Open chat window",
+    "toolHint": "The chat window slides in from the left. If it is already open, this button simply focuses it and passes along the currently selected PDF.",
+    "toolTitleMenu": "Chatbot (Alpha)",
+    "toolMenuDescription": "Chat with Stirling Bot about the contents of your PDF."
   }
 }

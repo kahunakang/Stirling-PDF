@@ -7,10 +7,17 @@ import LocalIcon from '@app/components/shared/LocalIcon';
 import { Tooltip } from '@app/components/shared/Tooltip';
 import { SearchInterface } from '@app/components/viewer/SearchInterface';
 import ViewerAnnotationControls from '@app/components/shared/rightRail/ViewerAnnotationControls';
+import { useChatbot } from '@app/contexts/ChatbotContext';
+import { useFileState } from '@app/contexts/FileContext';
 
 export function useViewerRightRailButtons() {
   const { t } = useTranslation();
   const viewer = useViewer();
+  const { openChat } = useChatbot();
+  const { selectors } = useFileState();
+  const filesSignature = selectors.getFilesSignature();
+  const files = useMemo(() => selectors.getFiles(), [selectors, filesSignature]);
+  const activeFile = files[viewer.activeFileIndex] || files[0];
   const [isPanning, setIsPanning] = useState<boolean>(() => viewer.getPanState()?.isPanning ?? false);
 
   // Lift i18n labels out of memo for clarity
@@ -19,6 +26,7 @@ export function useViewerRightRailButtons() {
   const rotateLeftLabel = t('rightRail.rotateLeft', 'Rotate Left');
   const rotateRightLabel = t('rightRail.rotateRight', 'Rotate Right');
   const sidebarLabel = t('rightRail.toggleSidebar', 'Toggle Sidebar');
+  const chatLabel = t('chatbot.viewerButton', 'Chat about this PDF');
 
   const viewerButtons = useMemo<RightRailButtonWithAction[]>(() => {
     return [
@@ -52,6 +60,20 @@ export function useViewerRightRailButtons() {
             </Popover>
           </Tooltip>
         )
+      },
+      {
+        id: 'viewer-chatbot',
+        icon: <LocalIcon icon="smart-toy-rounded" width="1.5rem" height="1.5rem" />,
+        tooltip: chatLabel,
+        ariaLabel: chatLabel,
+        section: 'top' as const,
+        order: 15,
+        disabled: !activeFile,
+        onClick: () => {
+          if (activeFile) {
+            openChat({ source: 'viewer', fileId: activeFile.fileId });
+          }
+        },
       },
       {
         id: 'viewer-pan-mode',
@@ -119,7 +141,19 @@ export function useViewerRightRailButtons() {
         )
       }
     ];
-  }, [t, viewer, isPanning, searchLabel, panLabel, rotateLeftLabel, rotateRightLabel, sidebarLabel]);
+  }, [
+    t,
+    viewer,
+    isPanning,
+    searchLabel,
+    panLabel,
+    rotateLeftLabel,
+    rotateRightLabel,
+    sidebarLabel,
+    chatLabel,
+    openChat,
+    activeFile?.fileId,
+  ]);
 
   useRightRailButtons(viewerButtons);
 }
