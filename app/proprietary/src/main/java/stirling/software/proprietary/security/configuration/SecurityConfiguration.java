@@ -10,6 +10,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -121,6 +122,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors(Customizer.withDefaults());
         if (securityProperties.getCsrfDisabled() || !loginEnabledValue) {
             http.csrf(CsrfConfigurer::disable);
         }
@@ -144,39 +146,50 @@ public class SecurityConfiguration {
                         new CsrfTokenRequestAttributeHandler();
                 requestHandler.setCsrfRequestAttributeName(null);
                 http.csrf(
-                        csrf ->
-                                csrf.ignoringRequestMatchers(
-                                                request -> {
-                                                    String uri = request.getRequestURI();
+                                csrf ->
+                                        csrf.ignoringRequestMatchers(
+                                                        request -> {
+                                                            String uri = request.getRequestURI();
 
-                                                    // Ignore CSRF for auth endpoints
-                                                    if (uri.startsWith("/api/v1/auth/")) {
-                                                        return true;
-                                                    }
+                                                            // Ignore CSRF for auth endpoints
+                                                            if (uri.startsWith("/api/v1/auth/")) {
+                                                                return true;
+                                                            }
 
-                                                    String apiKey = request.getHeader("X-API-KEY");
-                                                    // If there's no API key, don't ignore CSRF
-                                                    // (return false)
-                                                    if (apiKey == null || apiKey.trim().isEmpty()) {
-                                                        return false;
-                                                    }
-                                                    // Validate API key using existing UserService
-                                                    try {
-                                                        Optional<User> user =
-                                                                userService.getUserByApiKey(apiKey);
-                                                        // If API key is valid, ignore CSRF (return
-                                                        // true)
-                                                        // If API key is invalid, don't ignore CSRF
-                                                        // (return false)
-                                                        return user.isPresent();
-                                                    } catch (Exception e) {
-                                                        // If there's any error validating the API
-                                                        // key, don't ignore CSRF
-                                                        return false;
-                                                    }
-                                                })
-                                        .csrfTokenRepository(cookieRepo)
-                                        .csrfTokenRequestHandler(requestHandler));
+                                                            String apiKey =
+                                                                    request.getHeader("X-API-KEY");
+                                                            // If there's no API key, don't ignore
+                                                            // CSRF
+                                                            // (return false)
+                                                            if (apiKey == null
+                                                                    || apiKey.trim().isEmpty()) {
+                                                                return false;
+                                                            }
+                                                            // Validate API key using existing
+                                                            // UserService
+                                                            try {
+                                                                Optional<User> user =
+                                                                        userService.getUserByApiKey(
+                                                                                apiKey);
+                                                                // If API key is valid, ignore CSRF
+                                                                // (return
+                                                                // true)
+                                                                // If API key is invalid, don't
+                                                                // ignore CSRF
+                                                                // (return false)
+                                                                return user.isPresent();
+                                                            } catch (Exception e) {
+                                                                // If there's any error validating
+                                                                // the API
+                                                                // key, don't ignore CSRF
+                                                                return false;
+                                                            }
+                                                        })
+                                                .csrfTokenRepository(cookieRepo)
+                                                .csrfTokenRequestHandler(requestHandler))
+                        .formLogin(form -> form)
+                        .logout(logout -> logout)
+                        .httpBasic(Customizer.withDefaults());
             }
 
             http.sessionManagement(

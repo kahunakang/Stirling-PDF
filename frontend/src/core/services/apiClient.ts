@@ -6,6 +6,9 @@ import { setupApiInterceptors } from '@app/services/apiClientSetup';
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/',
   responseType: 'json',
+  withCredentials: true,
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
 });
 
 // Setup interceptors (core does nothing, proprietary adds JWT auth)
