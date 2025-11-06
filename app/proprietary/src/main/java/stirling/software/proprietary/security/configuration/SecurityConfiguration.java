@@ -152,7 +152,9 @@ public class SecurityConfiguration {
                                                             String uri = request.getRequestURI();
 
                                                             // Ignore CSRF for auth endpoints
-                                                            if (uri.startsWith("/api/v1/auth/")) {
+                                                            if (uri.startsWith("/api/v1/auth/")
+                                                                    || uri.startsWith(
+                                                                            "/api/v1/internal/chatbot/")) {
                                                                 return true;
                                                             }
 
