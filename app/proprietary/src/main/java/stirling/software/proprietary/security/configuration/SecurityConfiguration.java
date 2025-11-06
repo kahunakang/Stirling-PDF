@@ -187,8 +187,6 @@ public class SecurityConfiguration {
                                                         })
                                                 .csrfTokenRepository(cookieRepo)
                                                 .csrfTokenRequestHandler(requestHandler))
-                        .formLogin(form -> form)
-                        .logout(logout -> logout)
                         .httpBasic(Customizer.withDefaults());
             }
 
