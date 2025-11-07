@@ -15,6 +15,7 @@ import { useSignature } from '@app/contexts/SignatureContext';
 import LocalIcon from '@app/components/shared/LocalIcon';
 
 import { useSidebarContext } from '@app/contexts/SidebarContext';
+import { useChatbot } from '@app/contexts/ChatbotContext';
 import { RightRailButtonConfig, RightRailRenderContext, RightRailSection } from '@app/types/rightRail';
 
 const SECTION_ORDER: RightRailSection[] = ['top', 'middle', 'bottom'];
@@ -40,6 +41,7 @@ export default function RightRail() {
   const viewerContext = React.useContext(ViewerContext);
   const { toggleTheme } = useRainbowThemeContext();
   const { buttons, actions, allButtonsDisabled } = useRightRail();
+  const { openChat } = useChatbot();
 
   const { pageEditorFunctions, toolPanelMode, leftPanelView } = useToolWorkflow();
   const disableForFullscreen = toolPanelMode === 'fullscreen' && leftPanelView === 'toolPicker';
@@ -54,6 +56,8 @@ export default function RightRail() {
   const pageEditorTotalPages = pageEditorFunctions?.totalPages ?? 0;
   const pageEditorSelectedCount = pageEditorFunctions?.selectedPageIds?.length ?? 0;
   const exportState = viewerContext?.getExportState?.();
+  const chatLabel = t('chatbot.viewerButton', 'Chat about this PDF');
+  const viewerActiveFile = activeFiles[viewerContext?.activeFileIndex ?? 0];
 
   const totalItems = useMemo(() => {
     if (currentView === 'pageEditor') return pageEditorTotalPages;
@@ -220,6 +224,24 @@ export default function RightRail() {
               <LocalIcon icon="download" width="1.5rem" height="1.5rem" />
             </ActionIcon>,
             downloadTooltip
+          )}
+          {renderWithTooltip(
+            <ActionIcon
+              variant="subtle"
+              radius="md"
+              className="right-rail-icon"
+              onClick={() => {
+                if (viewerActiveFile) {
+                  openChat({ source: 'viewer', fileId: viewerActiveFile.fileId });
+                } else {
+                  openChat({ source: 'viewer' });
+                }
+              }}
+              disabled={!viewerActiveFile}
+            >
+              <LocalIcon icon="smart-toy-rounded" width="1.5rem" height="1.5rem" />
+            </ActionIcon>,
+            chatLabel
           )}
         </div>
 
